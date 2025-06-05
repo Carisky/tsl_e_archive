@@ -7,20 +7,32 @@ export class CategoryController {
     res.json(categories);
   }
 
-  static async create(req: Request, res: Response) {
+  static async create(req: Request, res: Response): Promise<void> {
+    if ((req as any).userRole !== 'SUPERADMIN') {
+      res.status(403).json({ error: 'Forbidden' });
+      return;
+    }
     const { name } = req.body;
     const category = await CategoryService.create(name);
     res.status(201).json(category);
   }
 
-  static async update(req: Request, res: Response) {
+  static async update(req: Request, res: Response): Promise<void> {
+    if ((req as any).userRole !== 'SUPERADMIN') {
+      res.status(403).json({ error: 'Forbidden' });
+      return;
+    }
     const id = parseInt(req.params.id);
     const { name } = req.body;
     const category = await CategoryService.update(id, name);
     res.json(category);
   }
 
-  static async remove(req: Request, res: Response) {
+  static async remove(req: Request, res: Response): Promise<void> {
+    if ((req as any).userRole !== 'SUPERADMIN') {
+      res.status(403).json({ error: 'Forbidden' });
+      return;
+    }
     const id = parseInt(req.params.id);
     await CategoryService.remove(id);
     res.status(204).end();

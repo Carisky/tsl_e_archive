@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { listFiles } from '@/api/file';
+import { listFiles, downloadFile, deleteFile } from '@/api/file';
 import { useRouter } from 'next/navigation';
 import { Container, Typography, TextField, Box, List, ListItem, ListItemText, Button } from '@mui/material';
 
@@ -39,6 +39,21 @@ export default function FilesPage() {
         {files.map((f) => (
           <ListItem key={f.id}>
             <ListItemText primary={f.filename} secondary={f.categories.map((c: any) => c.category.name).join(', ')} />
+            <Button onClick={async () => {
+              const blob = await downloadFile(f.id, auth.token || '');
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = f.filename;
+              a.click();
+              window.URL.revokeObjectURL(url);
+            }}>Download</Button>
+            {(auth.user && (auth.user.role === 'ADMIN' || auth.user.role === 'SUPERADMIN')) && (
+              <Button onClick={async () => {
+                await deleteFile(f.id, auth.token || '', auth.user?.role === 'SUPERADMIN');
+                setFiles(files.filter((x) => x.id !== f.id));
+              }}>Delete</Button>
+            )}
           </ListItem>
         ))}
       </List>

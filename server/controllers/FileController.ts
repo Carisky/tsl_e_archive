@@ -22,4 +22,26 @@ export class FileController {
     const files = await FileService.list(q);
     res.json(files);
   }
+
+  static async download(req: Request, res: Response): Promise<void> {
+    const id = parseInt(req.params.id);
+    const result = await FileService.download(id);
+    if (!result) {
+      res.status(404).end();
+      return;
+    }
+    res.setHeader('Content-Disposition', `attachment; filename="${result.file.filename}"`);
+    res.send(Buffer.from(result.data));
+  }
+
+  static async delete(req: Request, res: Response): Promise<void> {
+    const id = parseInt(req.params.id);
+    const role = (req as any).userRole;
+    if (role === 'SUPERADMIN' && req.query.force === 'true') {
+      await FileService.forceDelete(id);
+    } else {
+      await FileService.softDelete(id);
+    }
+    res.status(204).end();
+  }
 }

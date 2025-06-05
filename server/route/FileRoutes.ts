@@ -49,6 +49,8 @@ router.post('/upload', authMiddleware as any, upload.single('file'), FileControl
  *         description: List files
  */
 router.get('/', authMiddleware as any, FileController.list);
+router.get('/:id/download', authMiddleware as any, FileController.download);
+router.delete('/:id', authMiddleware as any, FileController.delete);
 
 /**
  * @swagger

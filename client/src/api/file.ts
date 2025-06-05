@@ -27,3 +27,21 @@ export async function listCategories(token: string) {
   if (!res.ok) throw new Error('Failed');
   return res.json();
 }
+
+export async function downloadFile(id: number, token: string) {
+  const res = await fetch(`${API_URL}/files/${id}/download`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error('Failed');
+  return res.blob();
+}
+
+export async function deleteFile(id: number, token: string, force = false) {
+  const url = new URL(`${API_URL}/files/${id}`);
+  if (force) url.searchParams.set('force', 'true');
+  const res = await fetch(url.toString(), {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error('Failed');
+}

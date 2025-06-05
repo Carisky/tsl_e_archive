@@ -2,7 +2,8 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
-import { uploadFile, listCategories } from '@/api/file';
+import { uploadFile } from '@/api/file';
+import { listCategories } from '@/api/category';
 import { Container, Typography, TextField, Button, Box, Select, MenuItem } from '@mui/material';
 
 export default function UploadPage() {

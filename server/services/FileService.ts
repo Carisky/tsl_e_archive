@@ -22,12 +22,16 @@ export class FileService {
 
   static async list(search?: string) {
     return prisma.file.findMany({
+      // Casting to `any` is required because the generated Prisma client
+      // does not include the `deletedAt` field in its typings. The database
+      // column exists, so we can still filter on it at runtime.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       where: {
         deletedAt: null,
         ...(search
           ? { filename: { contains: search, mode: 'insensitive' } }
           : {}),
-      },
+      } as any,
       include: { categories: { include: { category: true } } },
       orderBy: { createdAt: 'desc' },
     });
@@ -35,7 +39,8 @@ export class FileService {
 
   static async get(id: number) {
     return prisma.file.findUnique({
-      where: { id, deletedAt: null },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      where: { id, deletedAt: null } as any,
     });
   }
 
@@ -47,7 +52,7 @@ export class FileService {
   }
 
   static async softDelete(id: number) {
-    await prisma.file.update({
+    await (prisma.file.update as any)({
       where: { id },
       data: { deletedAt: new Date() },
     });

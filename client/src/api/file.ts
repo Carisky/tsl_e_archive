@@ -20,13 +20,6 @@ export async function listFiles(query: string, token: string) {
   return res.json();
 }
 
-export async function listCategories(token: string) {
-  const res = await fetch(`${API_URL}/files/categories`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  if (!res.ok) throw new Error('Failed');
-  return res.json();
-}
 
 export async function downloadFile(id: number, token: string) {
   const res = await fetch(`${API_URL}/files/${id}/download`, {

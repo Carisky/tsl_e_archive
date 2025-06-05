@@ -1,16 +1,27 @@
-import express, { Express, Request, Response , Application } from 'express';
+import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import userRoutes from './route/UserRoutes';
 
-//For env File 
 dotenv.config();
+const app = express();
+const PORT = process.env.PORT || 5000;
 
-const app: Application = express();
-const port = process.env.PORT || 8000;
+// Middleware
+app.use(cors());
+app.use(bodyParser.json());
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Welcome to Express & TypeScript Server');
+// Подключаем роуты
+app.use('/api/user', userRoutes);
+
+// Глобальный обработчик ошибок (на будущее)
+app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Internal Server Error' });
 });
 
-app.listen(port, () => {
-  console.log(`Server is Fire at https://localhost:${port}`);
+// Запуск сервера
+app.listen(PORT, () => {
+  console.log(`Server started on http://localhost:${PORT}`);
 });

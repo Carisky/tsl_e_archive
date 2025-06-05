@@ -32,13 +32,20 @@ export class UserService {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     // 3. Создаём пользователя
+    // Убеждаемся, что дефолтная роль существует
+    const defaultRole = await prisma.role.upsert({
+      where: { role: 'USER' },
+      update: {},
+      create: { role: 'USER' },
+    });
+
     const user = await prisma.user.create({
       data: {
         username,
         email,
         password: hashedPassword,
-        // По умолчанию даём роль с id = 1
-        roleId: 1,
+        // По умолчанию даём базовую роль
+        roleId: defaultRole.id,
       },
       select: {
         id: true,

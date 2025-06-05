@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import NavBar from "@/components/NavBarClient";
 import { AuthProvider } from "@/context/AuthContext";
+import ThemeRegistry from "@/components/ThemeRegistry";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,10 +17,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AuthProvider>
-          <NavBar />
-          {children}
-        </AuthProvider>
+        <ThemeRegistry>
+          <AuthProvider>
+            <NavBar />
+            {children}
+          </AuthProvider>
+        </ThemeRegistry>
       </body>
     </html>
   );

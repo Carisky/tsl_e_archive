@@ -5,13 +5,15 @@
   "scripts": {
     "build": "npx tsc",
     "start": "node dist/index.js",
-    "dev": "nodemon index.ts"
+    "dev": "nodemon index.ts",
+    "seed": "ts-node-dev prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.599.0",
     "@prisma/client": "^6.9.0",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
@@ -19,10 +21,12 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "knex": "^3.1.0",
+    "multer": "1.4.5-lts.2",
     "nodemon": "^3.1.10",
     "prisma": "^6.9.0",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
@@ -30,8 +34,11 @@
     "@types/express": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/knex": "^0.15.2",
+    "@types/multer": "^1.4.12",
+    "@types/node": "^20.11.17",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
+    "@types/uuid": "^10.0.0",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.8.3"
   }

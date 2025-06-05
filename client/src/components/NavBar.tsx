@@ -25,6 +25,12 @@ export default function NavBar() {
             <Button color="inherit" component={Link} href="/dashboard">
               Dashboard
             </Button>
+            <Button color="inherit" component={Link} href="/dashboard/upload">
+              Upload
+            </Button>
+            <Button color="inherit" component={Link} href="/dashboard/files">
+              Files
+            </Button>
             <Button color="inherit" onClick={handleLogout}>Logout</Button>
           </React.Fragment>
         ) : (

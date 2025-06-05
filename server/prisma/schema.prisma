@@ -52,3 +52,35 @@ model RolePermission {
   @@map("RolePermissions")
   @@unique([roleId, permissionId])
 }
+
+model File {
+  id        Int       @id @default(autoincrement())
+  key       String    @unique
+  filename  String
+  userId    Int?
+  user      User?     @relation(fields: [userId], references: [id])
+  createdAt DateTime  @default(now())
+  categories FileCategory[]
+
+  @@map("Files")
+}
+
+model Category {
+  id    Int           @id @default(autoincrement())
+  name  String        @unique
+  files FileCategory[]
+
+  @@map("Categories")
+}
+
+model FileCategory {
+  id         Int      @id @default(autoincrement())
+  fileId     Int
+  categoryId Int
+
+  file     File     @relation(fields: [fileId], references: [id])
+  category Category @relation(fields: [categoryId], references: [id])
+
+  @@map("FileCategories")
+  @@unique([fileId, categoryId])
+}

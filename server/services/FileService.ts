@@ -21,27 +21,41 @@ export class FileService {
   }
 
   static async list(search?: string) {
-    return prisma.file.findMany({
-      // Casting to `any` is required because the generated Prisma client
-      // does not include the `deletedAt` field in its typings. The database
-      // column exists, so we can still filter on it at runtime.
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      where: {
-        deletedAt: null,
-        ...(search
-          ? { filename: { contains: search, mode: 'insensitive' } }
-          : {}),
-      } as any,
-      include: { categories: { include: { category: true } } },
-      orderBy: { createdAt: 'desc' },
-    });
+    let query = `
+      SELECT
+        f.id,
+        f.key,
+        f.filename,
+        f."userId",
+        f."createdAt",
+        COALESCE(
+          json_agg(json_build_object('category', json_build_object('id', c.id, 'name', c.name)))
+          FILTER (WHERE c.id IS NOT NULL),
+          '[]'
+        ) AS categories
+      FROM "Files" f
+      LEFT JOIN "FileCategories" fc ON fc."fileId" = f.id
+      LEFT JOIN "Categories" c ON c.id = fc."categoryId"
+      WHERE f."deletedAt" IS NULL`;
+    const params: any[] = [];
+    if (search) {
+      params.push(`%${search}%`);
+      query += ` AND f."filename" ILIKE $${params.length}`;
+    }
+    query += ' GROUP BY f.id ORDER BY f."createdAt" DESC';
+    const files = await prisma.$queryRawUnsafe(query, ...params);
+    return files.map((f: any) => ({
+      ...f,
+      categories: typeof f.categories === 'string' ? JSON.parse(f.categories) : f.categories,
+    }));
   }
 
   static async get(id: number) {
-    return prisma.file.findUnique({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      where: { id, deletedAt: null } as any,
-    });
+    const result = await prisma.$queryRawUnsafe(
+      'SELECT * FROM "Files" WHERE id = $1 AND "deletedAt" IS NULL LIMIT 1',
+      id,
+    );
+    return result[0] || null;
   }
 
   static async download(id: number) {
@@ -52,10 +66,7 @@ export class FileService {
   }
 
   static async softDelete(id: number) {
-    await (prisma.file.update as any)({
-      where: { id },
-      data: { deletedAt: new Date() },
-    });
+    await prisma.$executeRawUnsafe('UPDATE "Files" SET "deletedAt" = NOW() WHERE id = $1', id);
   }
 
   static async forceDelete(id: number) {

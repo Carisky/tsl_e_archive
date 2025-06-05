@@ -31,6 +31,11 @@ export default function NavBar() {
             <Button color="inherit" component={Link} href="/dashboard/files">
               Files
             </Button>
+            {auth.user.role === 'SUPERADMIN' && (
+              <Button color="inherit" component={Link} href="/dashboard/categories">
+                Categories
+              </Button>
+            )}
             <Button color="inherit" onClick={handleLogout}>Logout</Button>
           </React.Fragment>
         ) : (

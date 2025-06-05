@@ -47,15 +47,17 @@ export class UserService {
         // По умолчанию даём базовую роль
         roleId: defaultRole.id,
       },
-      select: {
-        id: true,
-        username: true,
-        email: true,
-        roleId: true,
+      include: {
+        role: true,
       },
     });
 
-    return user;
+    return {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.role.role,
+    };
   }
 
   // Аутентификация: проверяем email + password
@@ -63,7 +65,10 @@ export class UserService {
     const { email, password } = data;
 
     // 1. Ищем пользователя по email
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({
+      where: { email },
+      include: { role: true },
+    });
     if (!user) {
       throw new Error('Неверный email или пароль');
     }
@@ -75,7 +80,7 @@ export class UserService {
     }
 
     // 3. Возвращаем объект без поля password
-    const { password: _p, ...userWithoutPassword } = user;
-    return userWithoutPassword;
+    const { password: _p, roleId: _roleId, role, ...userWithoutPassword } = user;
+    return { ...userWithoutPassword, role: role.role };
   }
 }

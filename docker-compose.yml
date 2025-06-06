@@ -25,14 +25,20 @@ services:
 
   minio-init:
     image: minio/mc
+    profiles: ["init"]
     depends_on:
       - minio
     entrypoint: >
       /bin/sh -c "
-        until (/usr/bin/mc alias set local http://minio:9000 minio minio123); do echo 'waiting for minio' && sleep 1; done;
-        /usr/bin/mc mb --ignore-existing local/uploads;
+        until mc alias set local http://minio:9000 minio minio123; do
+          echo 'waiting for minio' && sleep 1;
+        done;
+        if ! mc ls local/uploads >/dev/null 2>&1; then
+          mc mb local/uploads;
+        fi;
         exit 0;
       "
+
 
 volumes:
   db-data:

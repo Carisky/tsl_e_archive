@@ -5,6 +5,10 @@ import { useAuth } from '@/context/AuthContext';
 import { getFile, deleteFile, updateFile, fileDownloadUrl } from '@/api/file';
 import { Container, Box, Typography, Button } from '@mui/material';
 import DocViewer, { DocViewerRenderers } from 'react-doc-viewer';
+import { pdfjs } from 'react-pdf';
+
+// Explicitly set PDF.js worker path so that previews work in Next.js
+pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.mjs`;
 
 export default function FilePreviewPage({ params }: any) {
   const { auth } = useAuth();

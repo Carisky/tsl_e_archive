@@ -10,13 +10,18 @@ export default function FilePreviewPage({ params }: any) {
   const router = useRouter();
   const [file, setFile] = useState<any | null>(null);
   const [url, setUrl] = useState<string | null>(null);
+  const [ext, setExt] = useState<string>('');
 
   useEffect(() => {
     if (!auth.user) {
       router.replace('/login');
     } else {
       getFile(parseInt(params.id), auth.token || '')
-        .then(setFile)
+        .then((data) => {
+          setFile(data);
+          const e = data.filename.split('.').pop()?.toLowerCase() || '';
+          setExt(e);
+        })
         .catch(() => {});
       downloadFile(parseInt(params.id), auth.token || '')
         .then((blob) => setUrl(URL.createObjectURL(blob)))
@@ -59,7 +64,13 @@ export default function FilePreviewPage({ params }: any) {
     <Container sx={{ mt: 4, display: 'flex', gap: 2 }}>
       <Box sx={{ width: '70%' }}>
         {url && (
-          <iframe src={url} style={{ width: '100%', height: '80vh' }} />
+          ext === 'pdf' || ext === 'txt' ? (
+            <iframe src={url} style={{ width: '100%', height: '80vh' }} />
+          ) : ext === 'png' || ext === 'jpg' || ext === 'jpeg' || ext === 'gif' || ext === 'svg' ? (
+            <img src={url} style={{ maxWidth: '100%', maxHeight: '80vh' }} />
+          ) : (
+            <Typography>Cannot preview this file type</Typography>
+          )
         )}
       </Box>
       <Box sx={{ width: '30%', display: 'flex', flexDirection: 'column', gap: 2 }}>

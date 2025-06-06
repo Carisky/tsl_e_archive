@@ -2,8 +2,9 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { getFile, downloadFile, deleteFile, updateFile } from '@/api/file';
+import { getFile, deleteFile, updateFile, fileDownloadUrl } from '@/api/file';
 import { Container, Box, Typography, Button } from '@mui/material';
+import DocViewer, { DocViewerRenderers } from 'react-doc-viewer';
 
 export default function FilePreviewPage({ params }: any) {
   const { auth } = useAuth();
@@ -13,7 +14,6 @@ export default function FilePreviewPage({ params }: any) {
   const [ext, setExt] = useState<string>('');
 
   useEffect(() => {
-    let objectUrl: string | null = null;
     if (!auth.user) {
       router.replace('/login');
     } else {
@@ -22,34 +22,22 @@ export default function FilePreviewPage({ params }: any) {
           setFile(data);
           const e = data.filename.split('.').pop()?.toLowerCase() || '';
           setExt(e);
-          if (
-            ['pdf', 'txt', 'png', 'jpg', 'jpeg', 'gif', 'svg'].includes(e)
-          ) {
-            return downloadFile(parseInt(params.id), auth.token || '').then(
-              (blob) => {
-                objectUrl = URL.createObjectURL(blob);
-                setUrl(objectUrl);
-              }
-            );
+          if (['pdf', 'txt', 'png', 'jpg', 'jpeg', 'gif', 'svg'].includes(e)) {
+            setUrl(fileDownloadUrl(parseInt(params.id), auth.token || ''));
           }
         })
         .catch(() => {});
     }
-    return () => {
-      if (objectUrl) URL.revokeObjectURL(objectUrl);
-    };
+    return () => {};
   }, [auth, params.id, router]);
 
   if (!auth.user || !file) return null;
 
-  const doDownload = async () => {
-    const blob = await downloadFile(file.id, auth.token || '');
-    const durl = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = durl;
-    a.download = file.filename;
-    a.click();
-    window.URL.revokeObjectURL(durl);
+  const doDownload = () => {
+    const link = document.createElement('a');
+    link.href = fileDownloadUrl(file.id, auth.token || '');
+    link.download = file.filename;
+    link.click();
   };
 
   const doDelete = async () => {
@@ -74,14 +62,15 @@ export default function FilePreviewPage({ params }: any) {
   return (
     <Container sx={{ mt: 4, display: 'flex', gap: 2 }}>
       <Box sx={{ width: '70%' }}>
-        {url && (
-          ext === 'pdf' || ext === 'txt' ? (
-            <iframe src={url} style={{ width: '100%', height: '80vh' }} />
-          ) : ext === 'png' || ext === 'jpg' || ext === 'jpeg' || ext === 'gif' || ext === 'svg' ? (
-            <img src={url} style={{ maxWidth: '100%', maxHeight: '80vh' }} />
-          ) : (
-            <Typography>Cannot preview this file type</Typography>
-          )
+        {url ? (
+          <DocViewer
+            documents={[{ uri: url, fileType: ext }]}
+            pluginRenderers={DocViewerRenderers}
+            style={{ height: '80vh' }}
+            config={{ header: { disableHeader: true, disableFileName: true } }}
+          />
+        ) : (
+          <Typography>Cannot preview this file type</Typography>
         )}
       </Box>
       <Box sx={{ width: '30%', display: 'flex', flexDirection: 'column', gap: 2 }}>

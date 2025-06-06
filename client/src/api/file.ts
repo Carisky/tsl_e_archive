@@ -1,5 +1,11 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
+export function fileDownloadUrl(id: number, token: string) {
+  const url = new URL(`${API_URL}/files/${id}/download`);
+  url.searchParams.set('token', token);
+  return url.toString();
+}
+
 export async function uploadFile(formData: FormData, token: string) {
   const res = await fetch(`${API_URL}/files/upload`, {
     method: 'POST',

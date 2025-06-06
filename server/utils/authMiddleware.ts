@@ -4,18 +4,9 @@ import { verifyToken } from './auth';
 export function authMiddleware(req: Request, res: Response, next: NextFunction) {
   const auth = req.headers.authorization;
   let token: string | null = null;
-
-  if (auth) {
-    token = auth.split(' ')[1];
-  } else if (req.query.token) {
-    const queryToken = req.query.token as any;
-    token = Array.isArray(queryToken) ? queryToken[0] : (queryToken as string);
-  }
-
-  if (!token) {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
-
+  if (auth) token = auth.split(' ')[1];
+  else if (typeof req.query.token === 'string') token = req.query.token;
+  if (!token) return res.status(401).json({ error: 'Unauthorized' });
   try {
     const payload = verifyToken(token);
     (req as any).userId = payload.userId;

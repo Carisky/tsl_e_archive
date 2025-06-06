@@ -9,8 +9,6 @@ import { swaggerSpec } from './swagger';
 
 dotenv.config();
 const app = express();
-// Use Node's simple query parser so JWT tokens in query params are read correctly
-app.set('query parser', 'simple');
 const PORT = process.env.PORT || 5000;
 
 // Middleware

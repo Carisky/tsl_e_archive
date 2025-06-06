@@ -36,6 +36,7 @@ export class FileService {
   static async get(id: number) {
     return prisma.file.findUnique({
       where: { id, deletedAt: null },
+      include: { categories: { include: { category: true } } },
     });
   }
 
@@ -47,7 +48,11 @@ export class FileService {
   }
 
   static async update(id: number, filename: string) {
-    return prisma.file.update({ where: { id }, data: { filename } });
+    return prisma.file.update({
+      where: { id },
+      data: { filename },
+      include: { categories: { include: { category: true } } },
+    });
   }
 
   static async softDelete(id: number) {

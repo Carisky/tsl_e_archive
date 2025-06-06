@@ -13,6 +13,7 @@ export default function FilePreviewPage({ params }: any) {
   const [ext, setExt] = useState<string>('');
 
   useEffect(() => {
+    let objectUrl: string | null = null;
     if (!auth.user) {
       router.replace('/login');
     } else {
@@ -21,12 +22,22 @@ export default function FilePreviewPage({ params }: any) {
           setFile(data);
           const e = data.filename.split('.').pop()?.toLowerCase() || '';
           setExt(e);
+          if (
+            ['pdf', 'txt', 'png', 'jpg', 'jpeg', 'gif', 'svg'].includes(e)
+          ) {
+            return downloadFile(parseInt(params.id), auth.token || '').then(
+              (blob) => {
+                objectUrl = URL.createObjectURL(blob);
+                setUrl(objectUrl);
+              }
+            );
+          }
         })
         .catch(() => {});
-      downloadFile(parseInt(params.id), auth.token || '')
-        .then((blob) => setUrl(URL.createObjectURL(blob)))
-        .catch(() => {});
     }
+    return () => {
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
   }, [auth, params.id, router]);
 
   if (!auth.user || !file) return null;

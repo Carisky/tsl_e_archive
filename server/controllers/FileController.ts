@@ -70,7 +70,7 @@ export class FileController {
       return;
     }
     res.setHeader('Content-Type', mimeType(result.file.filename));
-    res.setHeader('Content-Disposition', `inline; filename="${result.file.filename}"`);
+    // Allow browser preview without forcing download
     res.send(Buffer.from(result.data));
   }
 

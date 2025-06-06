@@ -38,3 +38,24 @@ export async function deleteFile(id: number, token: string, force = false) {
   });
   if (!res.ok) throw new Error('Failed');
 }
+
+export async function getFile(id: number, token: string) {
+  const res = await fetch(`${API_URL}/files/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error('Failed');
+  return res.json();
+}
+
+export async function updateFile(id: number, filename: string, token: string) {
+  const res = await fetch(`${API_URL}/files/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ filename }),
+  });
+  if (!res.ok) throw new Error('Failed');
+  return res.json();
+}

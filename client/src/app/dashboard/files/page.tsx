@@ -3,7 +3,20 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { listFiles, downloadFile, deleteFile } from '@/api/file';
 import { useRouter } from 'next/navigation';
-import { Container, Typography, TextField, Box, List, ListItem, ListItemText, Button } from '@mui/material';
+import {
+  Container,
+  Typography,
+  TextField,
+  Box,
+  List,
+  ListItem,
+  ListItemText,
+  Button,
+  ListItemIcon,
+} from '@mui/material';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import ArticleIcon from '@mui/icons-material/Article';
 
 export default function FilesPage() {
   const { auth } = useAuth();
@@ -26,6 +39,12 @@ export default function FilesPage() {
     setFiles(res);
   };
 
+  const iconFor = (name: string) => {
+    if (name.toLowerCase().endsWith('.pdf')) return <PictureAsPdfIcon />;
+    if (name.toLowerCase().endsWith('.txt')) return <ArticleIcon />;
+    return <InsertDriveFileIcon />;
+  };
+
   return (
     <Container sx={{ mt: 4 }}>
       <Typography variant="h5" gutterBottom>
@@ -38,7 +57,9 @@ export default function FilesPage() {
       <List>
         {files.map((f) => (
           <ListItem key={f.id}>
+            <ListItemIcon>{iconFor(f.filename)}</ListItemIcon>
             <ListItemText primary={f.filename} secondary={f.categories.map((c: any) => c.category.name).join(', ')} />
+            <Button onClick={() => router.push(`/dashboard/files/${f.id}`)}>Preview</Button>
             <Button onClick={async () => {
               const blob = await downloadFile(f.id, auth.token || '');
               const url = window.URL.createObjectURL(blob);

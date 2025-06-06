@@ -50,6 +50,8 @@ router.post('/upload', authMiddleware as any, upload.single('file'), FileControl
  */
 router.get('/', authMiddleware as any, FileController.list);
 router.get('/:id/download', authMiddleware as any, FileController.download);
+router.get('/:id', authMiddleware as any, FileController.get);
+router.put('/:id', authMiddleware as any, FileController.update);
 router.delete('/:id', authMiddleware as any, FileController.delete);
 
 /**

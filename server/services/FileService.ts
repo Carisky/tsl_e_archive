@@ -46,6 +46,10 @@ export class FileService {
     return { file, data };
   }
 
+  static async update(id: number, filename: string) {
+    return prisma.file.update({ where: { id }, data: { filename } });
+  }
+
   static async softDelete(id: number) {
     await prisma.file.update({
       where: { id },

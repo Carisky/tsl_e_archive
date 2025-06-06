@@ -23,6 +23,23 @@ export class FileController {
     res.json(files);
   }
 
+  static async get(req: Request, res: Response): Promise<void> {
+    const id = parseInt(req.params.id);
+    const file = await FileService.get(id);
+    if (!file) {
+      res.status(404).end();
+      return;
+    }
+    res.json(file);
+  }
+
+  static async update(req: Request, res: Response): Promise<void> {
+    const id = parseInt(req.params.id);
+    const { filename } = req.body;
+    const file = await FileService.update(id, filename);
+    res.json(file);
+  }
+
   static async download(req: Request, res: Response): Promise<void> {
     const id = parseInt(req.params.id);
     const result = await FileService.download(id);

@@ -49,25 +49,16 @@ router.post('/upload', authMiddleware as any, upload.single('file'), FileControl
  *         description: List files
  */
 router.get('/', authMiddleware as any, FileController.list);
+
+// Category routes should appear before dynamic :id routes to avoid conflicts
+router.get('/categories', authMiddleware as any, CategoryController.list);
+router.post('/categories', authMiddleware as any, CategoryController.create);
+router.put('/categories/:id', authMiddleware as any, CategoryController.update);
+router.delete('/categories/:id', authMiddleware as any, CategoryController.remove);
+
 router.get('/:id/download', authMiddleware as any, FileController.download);
 router.get('/:id', authMiddleware as any, FileController.get);
 router.put('/:id', authMiddleware as any, FileController.update);
 router.delete('/:id', authMiddleware as any, FileController.delete);
-
-/**
- * @swagger
- * /api/categories:
- *   get:
- *     summary: List categories
- *     tags: [Category]
- *     responses:
- *       200:
- *         description: List
- */
-router.get('/categories', authMiddleware as any, CategoryController.list);
-
-router.post('/categories', authMiddleware as any, CategoryController.create);
-router.put('/categories/:id', authMiddleware as any, CategoryController.update);
-router.delete('/categories/:id', authMiddleware as any, CategoryController.remove);
 
 export default router;

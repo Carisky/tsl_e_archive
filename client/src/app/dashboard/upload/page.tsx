@@ -34,13 +34,13 @@ export default function UploadPage() {
   };
 
   return (
-    <Container sx={{ mt: 4 }} maxWidth="sm">
+    <Container sx={{ mt: 4 }} >
       <Typography variant="h5" gutterBottom>
         Upload File
       </Typography>
       <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         <input type="file" onChange={(e) => setFile(e.target.files?.[0] || null)} />
-        <Select multiple value={selected} onChange={(e) => setSelected(e.target.value as number[])}>
+        <Select multiple fullWidth={true} value={selected} onChange={(e) => setSelected(e.target.value as number[])}>
           {categories.map((cat) => (
             <MenuItem key={cat.id} value={cat.id}>{cat.name}</MenuItem>
           ))}

@@ -68,7 +68,7 @@ export default function CategoriesPage() {
       </Typography>
       {auth.user.role === 'SUPERADMIN' && (
         <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-          <TextField label="Name" value={name} onChange={(e) => setName(e.target.value)} />
+          <TextField label="Name" fullWidth={true} value={name} onChange={(e) => setName(e.target.value)} />
           <Button variant="contained" onClick={add} disabled={!name.trim()}>
             Add
           </Button>

@@ -32,7 +32,7 @@ export default function FilesPage() {
         Files
       </Typography>
       <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-        <TextField label="Search" value={query} onChange={(e) => setQuery(e.target.value)} />
+        <TextField label="Search" fullWidth={true} value={query} onChange={(e) => setQuery(e.target.value)} />
         <Button variant="contained" onClick={search}>Search</Button>
       </Box>
       <List>

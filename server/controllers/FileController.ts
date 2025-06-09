@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import mime from 'mime-types';
 import { FileService } from '../services/FileService';
 
 export class FileController {
@@ -30,6 +31,8 @@ export class FileController {
       res.status(404).end();
       return;
     }
+    const mimeType = mime.lookup(result.file.filename) || 'application/octet-stream';
+    res.setHeader('Content-Type', mimeType as string);
     res.setHeader('Content-Disposition', `attachment; filename="${result.file.filename}"`);
     res.send(Buffer.from(result.data));
   }

@@ -29,6 +29,21 @@ export async function downloadFile(id: number, token: string) {
   return res.blob();
 }
 
+export async function fetchFile(id: number, token: string) {
+  const res = await fetch(`${API_URL}/files/${id}/download`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error('Failed');
+  let filename = `file_${id}`;
+  const disposition = res.headers.get('Content-Disposition');
+  if (disposition) {
+    const match = disposition.match(/filename="(.+)"/);
+    if (match) filename = match[1];
+  }
+  const blob = await res.blob();
+  return { blob, filename };
+}
+
 export async function deleteFile(id: number, token: string, force = false) {
   const url = new URL(`${API_URL}/files/${id}`);
   if (force) url.searchParams.set('force', 'true');

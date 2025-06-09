@@ -39,6 +39,11 @@ export default function FilesPage() {
         {files.map((f) => (
           <ListItem key={f.id}>
             <ListItemText primary={f.filename} secondary={f.categories.map((c: any) => c.category.name).join(', ')} />
+            <Button
+              onClick={() => router.push(`/dashboard/files/${f.id}`)}
+            >
+              Preview
+            </Button>
             <Button onClick={async () => {
               const blob = await downloadFile(f.id, auth.token || '');
               const url = window.URL.createObjectURL(blob);

@@ -1,14 +1,17 @@
 "use client";
 import { useState } from "react";
-import { TextField, Button, Container, Typography, Box } from "@mui/material";
+import { TextField, Button, Container, Typography, Box, IconButton, InputAdornment } from "@mui/material";
 import { loginUser } from "@/api/user";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { IconButton, InputAdornment } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 
 export default function LoginPage() {
   const router = useRouter();
+  const params = useParams();
+  const lang = Array.isArray(params.lang) ? params.lang[0] : params.lang ?? "en";
+  const { t } = useTranslation();
   const { setAuth } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,16 +25,16 @@ export default function LoginPage() {
     try {
       const { user, token } = await loginUser({ email, password });
       setAuth({ token, user });
-      router.push("/dashboard");
+      router.push(`/${lang}/dashboard`);
     } catch (err) {
-      setError("Login failed");
+      setError(t('login.error'));
     }
   };
 
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom>
-        Login
+        {t('login.title')}
       </Typography>
       <Box
         component="form"
@@ -39,14 +42,14 @@ export default function LoginPage() {
         sx={{ display: "flex", flexDirection: "column", gap: 2 }}
       >
         <TextField
-          label="Email"
+          label={t('login.email')}
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
         <TextField
-          label="Password"
+          label={t('login.password')}
           type={showPassword ? "text" : "password"}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -58,7 +61,7 @@ export default function LoginPage() {
                   onClick={toggleShowPassword}
                   edge="end"
                   aria-label={
-                    showPassword ? "Скрыть пароль" : "Показать пароль"
+                    showPassword ? t('login.hidePassword') : t('login.showPassword')
                   }
                 >
                   {showPassword ? <VisibilityOff /> : <Visibility />}
@@ -73,7 +76,7 @@ export default function LoginPage() {
           </Typography>
         )}
         <Button variant="contained" type="submit">
-          Login
+          {t('login.submit')}
         </Button>
       </Box>
     </Container>

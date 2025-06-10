@@ -14,6 +14,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 // PDF
 import { Document, Page, pdfjs } from "react-pdf";
@@ -28,6 +29,8 @@ export default function FilePreviewPage() {
   const { auth, initialized } = useAuth();
   const params = useParams();
   const router = useRouter();
+  const lang = Array.isArray(params.lang) ? params.lang[0] : params.lang ?? 'en';
+  const { t } = useTranslation();
 
   // state
   const [url, setUrl] = useState<string>("");
@@ -45,11 +48,11 @@ export default function FilePreviewPage() {
   useEffect(() => {
     if (!initialized) return;
     if (!auth.user) {
-      router.replace("/login");
+      router.replace(`/${lang}/login`);
       return;
     }
     if (!idStr || isNaN(idNum)) {
-      router.replace("/dashboard/files");
+      router.replace(`/${lang}/dashboard/files`);
       return;
     }
 
@@ -113,7 +116,7 @@ export default function FilePreviewPage() {
         }
       } catch (e: any) {
         console.error(e);
-        setError("Не удалось загрузить файл");
+        setError(t('file.failed'));
       }
     })();
   }, [initialized, auth, idStr, idNum, router]);
@@ -125,21 +128,21 @@ export default function FilePreviewPage() {
     return (
       <Container sx={{ mt: 4 }}>
         <Typography color="error">{error}</Typography>
-        <Button onClick={() => router.push("/dashboard/files")}>Назад</Button>
+        <Button onClick={() => router.push(`/${lang}/dashboard/files`)}>{t('file.back')}</Button>
       </Container>
     );
   }
 
   if (!url) {
-    return <Container sx={{ mt: 4 }}>Loading…</Container>;
+    return <Container sx={{ mt: 4 }}>{t('file.loading')}</Container>;
   }
 
   return (
     <Container sx={{ mt: 4 }}>
       <Box sx={{ mb: 2 }}>
-        <Button onClick={() => router.back()}>Back</Button>
+        <Button onClick={() => router.back()}>{t('file.back')}</Button>
         <Button component="a" href={url} download sx={{ ml: 2 }}>
-          Download {type}
+          {t('files.download')} {type}
         </Button>
       </Box>
 
@@ -215,7 +218,7 @@ export default function FilePreviewPage() {
         ".docx",
         ".odt",
       ].includes(type) && (
-        <Typography>Preview not supported for {type}</Typography>
+        <Typography>{t('file.previewUnsupported', { type })}</Typography>
       )}
     </Container>
   );

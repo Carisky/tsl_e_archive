@@ -1,14 +1,18 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { uploadFile } from '@/api/file';
 import { listCategories } from '@/api/category';
 import { Container, Typography, TextField, Button, Box, Select, MenuItem } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 export default function UploadPage() {
   const { auth, initialized } = useAuth();
   const router = useRouter();
+  const params = useParams();
+  const lang = Array.isArray(params.lang) ? params.lang[0] : params.lang ?? 'en';
+  const { t } = useTranslation();
   const [file, setFile] = useState<File | null>(null);
   const [categories, setCategories] = useState<any[]>([]);
   const [selected, setSelected] = useState<number[]>([]);
@@ -16,7 +20,7 @@ export default function UploadPage() {
   useEffect(() => {
     if (!initialized) return;
     if (!auth.user) {
-      router.replace('/login');
+      router.replace(`/${lang}/login`);
     } else {
       listCategories(auth.token || '').then(setCategories).catch(() => {});
     }
@@ -32,13 +36,13 @@ export default function UploadPage() {
     fd.append('file', file);
     fd.append('categories', selected.join(','));
     await uploadFile(fd, auth.token || '');
-    router.push('/dashboard/files');
+    router.push(`/${lang}/dashboard/files`);
   };
 
   return (
     <Container sx={{ mt: 4 }} >
       <Typography variant="h5" gutterBottom>
-        Upload File
+        {t('upload.title')}
       </Typography>
       <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         <input type="file" onChange={(e) => setFile(e.target.files?.[0] || null)} />
@@ -48,7 +52,7 @@ export default function UploadPage() {
           ))}
         </Select>
         <Button type="submit" variant="contained">
-          Upload
+          {t('upload.upload')}
         </Button>
       </Box>
     </Container>

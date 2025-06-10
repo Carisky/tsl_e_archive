@@ -1,0 +1,68 @@
+{
+  "navbar": {
+    "dashboard": "Панель",
+    "upload": "Загрузить",
+    "files": "Файлы",
+    "categories": "Категории",
+    "logout": "Выйти",
+    "login": "Войти",
+    "register": "Регистрация"
+  },
+  "home": {
+    "welcome": "Добро пожаловать в TSL e-архив",
+    "login": "Войти",
+    "register": "Регистрация",
+    "about": "О приложении"
+  },
+  "login": {
+    "title": "Вход",
+    "email": "Электронная почта",
+    "password": "Пароль",
+    "submit": "Войти",
+    "error": "Ошибка входа",
+    "showPassword": "Показать пароль",
+    "hidePassword": "Скрыть пароль"
+  },
+  "register": {
+    "title": "Регистрация",
+    "username": "Имя пользователя",
+    "email": "Электронная почта",
+    "password": "Пароль",
+    "submit": "Зарегистрироваться",
+    "error": "Ошибка регистрации"
+  },
+  "dashboard": {
+    "title": "Панель {{role}}",
+    "welcome": "Добро пожаловать, {{username}}!"
+  },
+  "categories": {
+    "title": "Категории",
+    "name": "Название",
+    "add": "Добавить",
+    "edit": "Редактировать",
+    "delete": "Удалить",
+    "newName": "Новое имя",
+    "deleteConfirm": "Удалить категорию?"
+  },
+  "files": {
+    "title": "Файлы",
+    "search": "Поиск",
+    "searchBtn": "Искать",
+    "preview": "Просмотр",
+    "download": "Скачать",
+    "delete": "Удалить"
+  },
+  "upload": {
+    "title": "Загрузка файла",
+    "upload": "Загрузить"
+  },
+  "about": {
+    "title": "О нас"
+  },
+  "file": {
+    "back": "Назад",
+    "previewUnsupported": "Предпросмотр не поддерживается для {{type}}",
+    "loading": "Загрузка…",
+    "failed": "Не удалось загрузить файл"
+  }
+}

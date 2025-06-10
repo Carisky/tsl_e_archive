@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import {
   listCategories,
@@ -18,17 +18,21 @@ import {
   ListItem,
   ListItemText,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 export default function CategoriesPage() {
   const { auth, initialized } = useAuth();
   const router = useRouter();
+  const params = useParams();
+  const lang = Array.isArray(params.lang) ? params.lang[0] : params.lang ?? 'en';
+  const { t } = useTranslation();
   const [categories, setCategories] = useState<any[]>([]);
   const [name, setName] = useState('');
 
   useEffect(() => {
     if (!initialized) return;
     if (!auth.user) {
-      router.replace('/login');
+      router.replace(`/${lang}/login`);
     } else {
       listCategories(auth.token || '').then(setCategories).catch(() => {});
     }
@@ -49,7 +53,7 @@ export default function CategoriesPage() {
   };
 
   const edit = async (id: number, current: string) => {
-    const value = prompt('New name', current);
+    const value = prompt(t('categories.newName'), current);
     if (value && value !== current) {
       await updateCategory(id, value, auth.token || '');
       setCategories(categories.map((c) => (c.id === id ? { ...c, name: value } : c)));
@@ -57,7 +61,7 @@ export default function CategoriesPage() {
   };
 
   const remove = async (id: number) => {
-    if (confirm('Delete category?')) {
+    if (confirm(t('categories.deleteConfirm'))) {
       await deleteCategory(id, auth.token || '');
       setCategories(categories.filter((c) => c.id !== id));
     }
@@ -66,13 +70,13 @@ export default function CategoriesPage() {
   return (
     <Container sx={{ mt: 4 }}>
       <Typography variant="h5" gutterBottom>
-        Categories
+        {t('categories.title')}
       </Typography>
       {auth.user.role === 'SUPERADMIN' && (
         <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-          <TextField label="Name" fullWidth={true} value={name} onChange={(e) => setName(e.target.value)} />
+          <TextField label={t('categories.name')} fullWidth={true} value={name} onChange={(e) => setName(e.target.value)} />
           <Button variant="contained" onClick={add} disabled={!name.trim()}>
-            Add
+            {t('categories.add')}
           </Button>
         </Box>
       )}
@@ -81,8 +85,8 @@ export default function CategoriesPage() {
           <ListItem key={c.id} secondaryAction={
             auth.user?.role === 'SUPERADMIN' ? (
               <Box sx={{ display: 'flex', gap: 1 }}>
-                <Button onClick={() => edit(c.id, c.name)}>Edit</Button>
-                <Button onClick={() => remove(c.id)}>Delete</Button>
+                <Button onClick={() => edit(c.id, c.name)}>{t('categories.edit')}</Button>
+                <Button onClick={() => remove(c.id)}>{t('categories.delete')}</Button>
               </Box>
             ) : null
           }>

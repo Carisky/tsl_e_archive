@@ -63,6 +63,7 @@
     "back": "Wstecz",
     "previewUnsupported": "Podgląd nieobsługiwany dla {{type}}",
     "loading": "Ładowanie…",
-    "failed": "Nie udało się załadować pliku"
+    "failed": "Nie udało się załadować pliku",
+    "print": "Drukuj"
   }
 }

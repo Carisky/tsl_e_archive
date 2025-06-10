@@ -63,6 +63,7 @@
     "back": "Back",
     "previewUnsupported": "Preview not supported for {{type}}",
     "loading": "Loading…",
-    "failed": "Failed to load file"
+    "failed": "Failed to load file",
+    "print": "Print"
   }
 }

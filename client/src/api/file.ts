@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function uploadFile(formData: FormData, token: string) {
   const res = await fetch(`${API_URL}/files/upload`, {

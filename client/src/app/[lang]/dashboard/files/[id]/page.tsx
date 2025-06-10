@@ -14,6 +14,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import PrintIcon from "@mui/icons-material/Print";
 import { useTranslation } from "react-i18next";
 
 // PDF
@@ -44,7 +45,7 @@ export default function FilePreviewPage() {
   const [html, setHtml] = useState<string>("");
   const [excelData, setExcelData] = useState<any[][]>([]);
   const [numPages, setNumPages] = useState<number>();
-  const [pageNumber, setPageNumber] = useState<number>(2);
+  const [pageNumber, setPageNumber] = useState<number>(1);
 
   // нормализуем id
   const rawId = params.id;
@@ -155,22 +156,60 @@ export default function FilePreviewPage() {
         <Button component="a" href={url} download sx={{ ml: 2 }}>
           {t("files.download")} {type}
         </Button>
+        <Button
+          sx={{ ml: 2 }}
+          startIcon={<PrintIcon />}
+          onClick={() => {
+            const w = window.open(url, "_blank");
+            if (w) {
+              w.addEventListener("load", () => w.print());
+            }
+          }}
+        >
+          {t("file.print")}
+        </Button>
       </Box>
 
       {/* PDF */}
       {type === ".pdf" && (
         <Container sx={{ mt: 4 }}>
           <Document file={url} onLoadSuccess={onDocumentLoadSuccess}>
-            <Page pageNumber={pageNumber} />
+            <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
+              <Page pageNumber={pageNumber} />
+              {pageNumber + 1 <= (numPages ?? 0) && (
+                <Page pageNumber={pageNumber + 1} />
+              )}
+            </Box>
           </Document>
-          <Box sx={{
-            display:"flex"
-          }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              justifyContent: "center",
+              mt: 2,
+            }}
+          >
+            <Button onClick={() => setPageNumber(Math.max(1, pageNumber - 2))}>
+              {"<"}
+            </Button>
             <Typography>
-            Page {pageNumber} of {numPages}
-          </Typography>
-          <Button onClick={()=>{setPageNumber(pageNumber-1)}}>{'<'}</Button>
-          <Button onClick={()=>{setPageNumber(pageNumber+1)}}>{'>'}</Button>
+              {pageNumber}
+              {pageNumber + 1 <= (numPages ?? 0) ? `-${pageNumber + 1}` : ""} of {numPages}
+            </Typography>
+            <Button
+              onClick={() => {
+                if (numPages) {
+                  if (pageNumber + 2 <= numPages) {
+                    setPageNumber(pageNumber + 2);
+                  } else if (pageNumber + 1 < numPages) {
+                    setPageNumber(numPages);
+                  }
+                }
+              }}
+            >
+              {">"}
+            </Button>
           </Box>
         </Container>
       )}

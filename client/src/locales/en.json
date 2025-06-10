@@ -1,0 +1,68 @@
+{
+  "navbar": {
+    "dashboard": "Dashboard",
+    "upload": "Upload",
+    "files": "Files",
+    "categories": "Categories",
+    "logout": "Logout",
+    "login": "Login",
+    "register": "Register"
+  },
+  "home": {
+    "welcome": "Welcome to TSL e-archive",
+    "login": "Login",
+    "register": "Register",
+    "about": "About App"
+  },
+  "login": {
+    "title": "Login",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Login",
+    "error": "Login failed",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
+  },
+  "register": {
+    "title": "Register",
+    "username": "Username",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Register",
+    "error": "Register failed"
+  },
+  "dashboard": {
+    "title": "{{role}} Dashboard",
+    "welcome": "Welcome, {{username}}!"
+  },
+  "categories": {
+    "title": "Categories",
+    "name": "Name",
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "newName": "New name",
+    "deleteConfirm": "Delete category?"
+  },
+  "files": {
+    "title": "Files",
+    "search": "Search",
+    "searchBtn": "Search",
+    "preview": "Preview",
+    "download": "Download",
+    "delete": "Delete"
+  },
+  "upload": {
+    "title": "Upload File",
+    "upload": "Upload"
+  },
+  "about": {
+    "title": "About us"
+  },
+  "file": {
+    "back": "Back",
+    "previewUnsupported": "Preview not supported for {{type}}",
+    "loading": "Loading…",
+    "failed": "Failed to load file"
+  }
+}

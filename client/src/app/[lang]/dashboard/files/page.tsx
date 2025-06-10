@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { listFiles, downloadFile, deleteFile } from "@/api/file";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import {
   Container,
   Typography,
@@ -13,17 +13,21 @@ import {
   ListItemText,
   Button,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 export default function FilesPage() {
   const { auth, initialized } = useAuth();
   const router = useRouter();
+  const params = useParams();
+  const lang = Array.isArray(params.lang) ? params.lang[0] : params.lang ?? 'en';
+  const { t } = useTranslation();
   const [query, setQuery] = useState("");
   const [files, setFiles] = useState<any[]>([]);
 
   useEffect(() => {
     if (!initialized) return;
     if (!auth.user) {
-      router.replace("/login");
+      router.replace(`/${lang}/login`);
     } else {
       listFiles("", auth.token || "")
         .then(setFiles)
@@ -42,17 +46,17 @@ export default function FilesPage() {
   return (
     <Container sx={{ mt: 4 }}>
       <Typography variant="h5" gutterBottom>
-        Files
+        {t('files.title')}
       </Typography>
       <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
         <TextField
-          label="Search"
+          label={t('files.search')}
           fullWidth={true}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
         <Button variant="contained" onClick={search}>
-          Search
+          {t('files.searchBtn')}
         </Button>
       </Box>
       <List>
@@ -66,9 +70,9 @@ export default function FilesPage() {
             />
             <Button
               variant="outlined"
-              onClick={() => router.push(`/dashboard/files/${f.id}`)}
+              onClick={() => router.push(`/${lang}/dashboard/files/${f.id}`)}
             >
-              Preview
+              {t('files.preview')}
             </Button>
             <Button
               onClick={async () => {
@@ -81,7 +85,7 @@ export default function FilesPage() {
                 window.URL.revokeObjectURL(url);
               }}
             >
-              Download
+              {t('files.download')}
             </Button>
             {auth.user &&
               (auth.user.role === "ADMIN" ||
@@ -96,7 +100,7 @@ export default function FilesPage() {
                     setFiles(files.filter((x) => x.id !== f.id));
                   }}
                 >
-                  Delete
+                  {t('files.delete')}
                 </Button>
               )}
           </ListItem>

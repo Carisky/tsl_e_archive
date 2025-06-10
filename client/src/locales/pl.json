@@ -1,0 +1,68 @@
+{
+  "navbar": {
+    "dashboard": "Panel",
+    "upload": "Prześlij",
+    "files": "Pliki",
+    "categories": "Kategorie",
+    "logout": "Wyloguj",
+    "login": "Zaloguj",
+    "register": "Rejestracja"
+  },
+  "home": {
+    "welcome": "Witamy w TSL e-archive",
+    "login": "Zaloguj",
+    "register": "Rejestracja",
+    "about": "O aplikacji"
+  },
+  "login": {
+    "title": "Logowanie",
+    "email": "Email",
+    "password": "Hasło",
+    "submit": "Zaloguj",
+    "error": "Błąd logowania",
+    "showPassword": "Pokaż hasło",
+    "hidePassword": "Ukryj hasło"
+  },
+  "register": {
+    "title": "Rejestracja",
+    "username": "Nazwa użytkownika",
+    "email": "Email",
+    "password": "Hasło",
+    "submit": "Zarejestruj",
+    "error": "Błąd rejestracji"
+  },
+  "dashboard": {
+    "title": "Panel {{role}}",
+    "welcome": "Witaj, {{username}}!"
+  },
+  "categories": {
+    "title": "Kategorie",
+    "name": "Nazwa",
+    "add": "Dodaj",
+    "edit": "Edytuj",
+    "delete": "Usuń",
+    "newName": "Nowa nazwa",
+    "deleteConfirm": "Usunąć kategorię?"
+  },
+  "files": {
+    "title": "Pliki",
+    "search": "Szukaj",
+    "searchBtn": "Szukaj",
+    "preview": "Podgląd",
+    "download": "Pobierz",
+    "delete": "Usuń"
+  },
+  "upload": {
+    "title": "Prześlij plik",
+    "upload": "Prześlij"
+  },
+  "about": {
+    "title": "O nas"
+  },
+  "file": {
+    "back": "Wstecz",
+    "previewUnsupported": "Podgląd nieobsługiwany dla {{type}}",
+    "loading": "Ładowanie…",
+    "failed": "Nie udało się załadować pliku"
+  }
+}

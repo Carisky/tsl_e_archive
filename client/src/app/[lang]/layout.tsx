@@ -10,14 +10,15 @@ export const metadata: Metadata = {
   description: 'i18n demo',
 };
 
-export default function LangLayout({
+export default async function LangLayout({
   children,
   params,
 }: {
   children: React.ReactNode;
-  params: { lang: string };
+  params: Promise<{ lang: string }>;
 }) {
-  const lang = params.lang;
+  const { lang } = await params;
+
   return (
     <ThemeRegistry>
       <AuthProvider>

@@ -25,7 +25,7 @@ import mammoth from "mammoth";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 export default function FilePreviewPage() {
-  const { auth } = useAuth();
+  const { auth, initialized } = useAuth();
   const params = useParams();
   const router = useRouter();
 
@@ -43,6 +43,7 @@ export default function FilePreviewPage() {
   const idNum = parseInt(idStr, 10);
 
   useEffect(() => {
+    if (!initialized) return;
     if (!auth.user) {
       router.replace("/login");
       return;
@@ -115,7 +116,10 @@ export default function FilePreviewPage() {
         setError("Не удалось загрузить файл");
       }
     })();
-  }, [auth, idStr, idNum, router]);
+  }, [initialized, auth, idStr, idNum, router]);
+
+  if (!initialized) return null;
+  if (!auth.user) return null;
 
   if (error) {
     return (

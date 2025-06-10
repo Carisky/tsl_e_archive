@@ -20,19 +20,21 @@ import {
 } from '@mui/material';
 
 export default function CategoriesPage() {
-  const { auth } = useAuth();
+  const { auth, initialized } = useAuth();
   const router = useRouter();
   const [categories, setCategories] = useState<any[]>([]);
   const [name, setName] = useState('');
 
   useEffect(() => {
+    if (!initialized) return;
     if (!auth.user) {
       router.replace('/login');
     } else {
       listCategories(auth.token || '').then(setCategories).catch(() => {});
     }
-  }, [auth, router]);
+  }, [initialized, auth, router]);
 
+  if (!initialized) return null;
   if (!auth.user) return null;
 
   const refresh = async () => {

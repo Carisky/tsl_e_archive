@@ -15,12 +15,13 @@ import {
 } from "@mui/material";
 
 export default function FilesPage() {
-  const { auth } = useAuth();
+  const { auth, initialized } = useAuth();
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [files, setFiles] = useState<any[]>([]);
 
   useEffect(() => {
+    if (!initialized) return;
     if (!auth.user) {
       router.replace("/login");
     } else {
@@ -28,8 +29,9 @@ export default function FilesPage() {
         .then(setFiles)
         .catch(() => {});
     }
-  }, [auth, router]);
+  }, [initialized, auth, router]);
 
+  if (!initialized) return null;
   if (!auth.user) return null;
 
   const search = async () => {

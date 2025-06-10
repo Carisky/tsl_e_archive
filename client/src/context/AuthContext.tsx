@@ -16,15 +16,18 @@ interface AuthState {
 interface AuthContextType {
   auth: AuthState;
   setAuth: (value: AuthState) => void;
+  initialized: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
   auth: { token: null, user: null },
   setAuth: () => {},
+  initialized: false,
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [auth, setAuthState] = useState<AuthState>({ token: null, user: null });
+  const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -32,6 +35,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (token && user) {
       setAuthState({ token, user: JSON.parse(user) });
     }
+    setInitialized(true);
   }, []);
 
   const setAuth = (value: AuthState) => {
@@ -46,7 +50,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ auth, setAuth }}>
+    <AuthContext.Provider value={{ auth, setAuth, initialized }}>
       {children}
     </AuthContext.Provider>
   );

@@ -12,6 +12,9 @@ export default function TranslationProvider({
 }) {
   useEffect(() => {
     i18n.changeLanguage(lang);
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = lang;
+    }
   }, [lang]);
 
   return <I18nextProvider i18n={i18n}>{children}</I18nextProvider>;

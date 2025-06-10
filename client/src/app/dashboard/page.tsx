@@ -5,15 +5,16 @@ import { useAuth } from '@/context/AuthContext';
 import { Typography, Container } from '@mui/material';
 
 export default function DashboardPage() {
-  const { auth } = useAuth();
+  const { auth, initialized } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!auth.user) {
+    if (initialized && !auth.user) {
       router.replace('/login');
     }
-  }, [auth.user, router]);
+  }, [initialized, auth.user, router]);
 
+  if (!initialized) return null;
   if (!auth.user) return null;
 
   return (

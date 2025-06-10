@@ -19,17 +19,13 @@ export default function LangLayout({
 }) {
   const lang = params.lang;
   return (
-    <html lang={lang}>
-      <body>
-        <ThemeRegistry>
-          <AuthProvider>
-            <TranslationProvider lang={lang}>
-              <NavBar />
-              {children}
-            </TranslationProvider>
-          </AuthProvider>
-        </ThemeRegistry>
-      </body>
-    </html>
+    <ThemeRegistry>
+      <AuthProvider>
+        <TranslationProvider lang={lang}>
+          <NavBar />
+          {children}
+        </TranslationProvider>
+      </AuthProvider>
+    </ThemeRegistry>
   );
 }

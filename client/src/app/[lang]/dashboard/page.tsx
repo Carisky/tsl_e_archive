@@ -1,16 +1,20 @@
 'use client';
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { Typography, Container } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 export default function DashboardPage() {
   const { auth, initialized } = useAuth();
   const router = useRouter();
+  const params = useParams();
+  const lang = Array.isArray(params.lang) ? params.lang[0] : params.lang ?? 'en';
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (initialized && !auth.user) {
-      router.replace('/login');
+      router.replace(`/${lang}/login`);
     }
   }, [initialized, auth.user, router]);
 
@@ -20,9 +24,9 @@ export default function DashboardPage() {
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom>
-        {auth.user.role} Dashboard
+        {t('dashboard.title', { role: auth.user.role })}
       </Typography>
-      <Typography>Welcome, {auth.user.username}!</Typography>
+      <Typography>{t('dashboard.welcome', { username: auth.user.username })}</Typography>
     </Container>
   );
 }

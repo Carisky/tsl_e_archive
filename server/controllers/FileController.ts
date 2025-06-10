@@ -44,4 +44,24 @@ export class FileController {
     }
     res.status(204).end();
   }
+
+  static async getLink(req: Request, res: Response): Promise<void> {
+    const id = parseInt(req.params.id, 10);
+    if (isNaN(id)) {
+      res.status(400).json({ error: 'Invalid id' });
+      return;
+    }
+
+    try {
+      const result = await FileService.getLink(id);
+      if (!result) {
+        res.status(404).json({ error: 'File not found or deleted' });
+        return;
+      }
+      res.json({ url: result.url, type: result.type });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
 }

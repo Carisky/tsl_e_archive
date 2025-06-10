@@ -51,7 +51,28 @@ router.post('/upload', authMiddleware as any, upload.single('file'), FileControl
 router.get('/', authMiddleware as any, FileController.list);
 router.get('/:id/download', authMiddleware as any, FileController.download);
 router.delete('/:id', authMiddleware as any, FileController.delete);
-
+/**
+ * @swagger
+ * /api/files/{id}/link:
+ *   get:
+ *     summary: Получить pre-signed URL файла
+ *     tags: [File]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Идентификатор файла
+ *     responses:
+ *       200:
+ *         description: { url: string }
+ *       400:
+ *         description: Invalid id
+ *       404:
+ *         description: File not found or deleted
+ */
+router.get('/:id/link', authMiddleware as any, FileController.getLink);
 /**
  * @swagger
  * /api/categories:

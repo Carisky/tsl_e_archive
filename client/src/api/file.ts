@@ -38,3 +38,11 @@ export async function deleteFile(id: number, token: string, force = false) {
   });
   if (!res.ok) throw new Error('Failed');
 }
+
+export async function getFileLink(id: number, token: string): Promise<{url: string; type: string}> {
+  const res = await fetch(`${API_URL}/files/${id}/link`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  if (!res.ok) throw new Error('Cannot get link');
+  return res.json();
+}

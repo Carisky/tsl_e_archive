@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import NavBar from "@/components/NavBarClient";
+import NavBar from "@/components/NavBar";
 import { AuthProvider } from "@/context/AuthContext";
 import ThemeRegistry from "@/components/ThemeRegistry";
 

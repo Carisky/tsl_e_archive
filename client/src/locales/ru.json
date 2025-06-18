@@ -50,7 +50,8 @@
     "searchBtn": "Искать",
     "preview": "Просмотр",
     "download": "Скачать",
-    "delete": "Удалить"
+    "delete": "Удалить",
+    "uncategorized": "Без категории"
   },
   "upload": {
     "title": "Загрузка файла",

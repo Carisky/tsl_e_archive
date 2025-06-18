@@ -28,9 +28,15 @@ export default function FilesPage() {
   const [files, setFiles] = useState<any[]>([]);
   const grouped = useMemo(() => {
     const res: Record<string, Record<string, any[]>> = {};
+    const uncategorized = t("files.uncategorized");
     for (const f of files) {
       const year = new Date(f.createdAt).getFullYear().toString();
       if (!res[year]) res[year] = {};
+      if (f.categories.length === 0) {
+        if (!res[year][uncategorized]) res[year][uncategorized] = [];
+        res[year][uncategorized].push(f);
+        continue;
+      }
       for (const fc of f.categories) {
         const cat = fc.category.name;
         if (!res[year][cat]) res[year][cat] = [];
@@ -38,7 +44,7 @@ export default function FilesPage() {
       }
     }
     return res;
-  }, [files]);
+  }, [files, t]);
 
   useEffect(() => {
     if (!initialized) return;

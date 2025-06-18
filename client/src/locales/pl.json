@@ -50,7 +50,8 @@
     "searchBtn": "Szukaj",
     "preview": "Podgląd",
     "download": "Pobierz",
-    "delete": "Usuń"
+    "delete": "Usuń",
+    "uncategorized": "Bez kategorii"
   },
   "upload": {
     "title": "Prześlij plik",

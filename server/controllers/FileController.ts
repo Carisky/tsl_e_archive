@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { FileService } from '../services/FileService';
+import { VirusTotalService } from '../services/VirusTotalService';
 
 export class FileController {
   static async upload(req: Request, res: Response): Promise<void> {
@@ -13,6 +14,13 @@ export class FileController {
       .map((v: string) => parseInt(v))
       .filter((v: number) => !isNaN(v));
     const userId = (req as any).userId as number | undefined;
+
+    const clean = await VirusTotalService.scanBuffer(file.buffer, file.originalname);
+    if (!clean) {
+      res.status(400).json({ error: 'File flagged as malicious' });
+      return;
+    }
+
     const created = await FileService.upload(file.originalname, file.buffer, userId, categoryIds);
     res.json(created);
   }

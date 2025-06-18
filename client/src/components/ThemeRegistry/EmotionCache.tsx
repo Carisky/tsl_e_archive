@@ -22,7 +22,7 @@ export default function NextAppDirEmotionCacheProvider(
     const prevInsert = cache.insert;
     let inserted: { name: string; isGlobal: boolean }[] = [];
     cache.insert = (...args) => {
-      const [selector, serialized] = args as [string | undefined, { name: string }];
+      const [selector, serialized] = args as unknown as [string | undefined, { name: string }];
       if (cache.inserted[serialized.name] === undefined) {
         inserted.push({
           name: serialized.name,
@@ -52,7 +52,7 @@ export default function NextAppDirEmotionCacheProvider(
     inserted.forEach(({ name, isGlobal }) => {
       const style = registry.cache.inserted[name];
 
-      if (typeof style !== 'boolean') {
+      if (typeof style !== 'boolean' && typeof style !== 'undefined') {
         if (isGlobal) {
           globals.push({ name, style });
         } else {

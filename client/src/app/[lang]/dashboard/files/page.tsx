@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { listFiles, downloadFile, deleteFile } from "@/api/file";
 import { useRouter, useParams } from "next/navigation";
@@ -12,6 +12,9 @@ import {
   ListItem,
   ListItemText,
   Button,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
@@ -23,6 +26,19 @@ export default function FilesPage() {
   const { t } = useTranslation();
   const [query, setQuery] = useState("");
   const [files, setFiles] = useState<any[]>([]);
+  const grouped = useMemo(() => {
+    const res: Record<string, Record<string, any[]>> = {};
+    for (const f of files) {
+      const year = new Date(f.createdAt).getFullYear().toString();
+      if (!res[year]) res[year] = {};
+      for (const fc of f.categories) {
+        const cat = fc.category.name;
+        if (!res[year][cat]) res[year][cat] = [];
+        res[year][cat].push(f);
+      }
+    }
+    return res;
+  }, [files]);
 
   useEffect(() => {
     if (!initialized) return;
@@ -60,50 +76,70 @@ export default function FilesPage() {
         </Button>
       </Box>
       <List>
-        {files.map((f) => (
-          <ListItem key={f.id}>
-            <ListItemText
-              primary={f.filename}
-              secondary={f.categories
-                .map((c: any) => c.category.name)
-                .join(", ")}
-            />
-            <Button
-              variant="outlined"
-              onClick={() => router.push(`/${lang}/dashboard/files/${f.id}`)}
-            >
-              {t('files.preview')}
-            </Button>
-            <Button
-              onClick={async () => {
-                const blob = await downloadFile(f.id, auth.token || "");
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = f.filename;
-                a.click();
-                window.URL.revokeObjectURL(url);
-              }}
-            >
-              {t('files.download')}
-            </Button>
-            {auth.user &&
-              (auth.user.role === "ADMIN" ||
-                auth.user.role === "SUPERADMIN") && (
-                <Button
-                  onClick={async () => {
-                    await deleteFile(
-                      f.id,
-                      auth.token || "",
-                      auth.user?.role === "SUPERADMIN"
-                    );
-                    setFiles(files.filter((x) => x.id !== f.id));
-                  }}
-                >
-                  {t('files.delete')}
-                </Button>
-              )}
-          </ListItem>
+        {Object.entries(grouped).map(([year, cats]) => (
+          <Accordion key={year} disableGutters>
+            <AccordionSummary>{year}</AccordionSummary>
+            <AccordionDetails>
+              <List>
+                {Object.entries(cats as Record<string, any[]>).map(
+                  ([catName, fs]) => (
+                    <Accordion key={catName} disableGutters sx={{ boxShadow: 0 }}>
+                      <AccordionSummary>{catName}</AccordionSummary>
+                      <AccordionDetails>
+                        <List>
+                          {fs.map((f) => (
+                            <ListItem key={f.id} sx={{ pl: 4 }}>
+                              <ListItemText primary={f.filename} />
+                              <Button
+                                variant="outlined"
+                                onClick={() =>
+                                  router.push(`/${lang}/dashboard/files/${f.id}`)
+                                }
+                              >
+                                {t('files.preview')}
+                              </Button>
+                              <Button
+                                onClick={async () => {
+                                  const blob = await downloadFile(
+                                    f.id,
+                                    auth.token || ""
+                                  );
+                                  const url = window.URL.createObjectURL(blob);
+                                  const a = document.createElement("a");
+                                  a.href = url;
+                                  a.download = f.filename;
+                                  a.click();
+                                  window.URL.revokeObjectURL(url);
+                                }}
+                              >
+                                {t('files.download')}
+                              </Button>
+                              {auth.user &&
+                                (auth.user.role === 'ADMIN' ||
+                                  auth.user.role === 'SUPERADMIN') && (
+                                  <Button
+                                    onClick={async () => {
+                                      await deleteFile(
+                                        f.id,
+                                        auth.token || '',
+                                        auth.user?.role === 'SUPERADMIN'
+                                      );
+                                      setFiles(files.filter((x) => x.id !== f.id));
+                                    }}
+                                  >
+                                    {t('files.delete')}
+                                  </Button>
+                                )}
+                            </ListItem>
+                          ))}
+                        </List>
+                      </AccordionDetails>
+                    </Accordion>
+                  )
+                )}
+              </List>
+            </AccordionDetails>
+          </Accordion>
         ))}
       </List>
     </Container>

@@ -50,7 +50,8 @@
     "searchBtn": "Search",
     "preview": "Preview",
     "download": "Download",
-    "delete": "Delete"
+    "delete": "Delete",
+    "uncategorized": "Uncategorized"
   },
   "upload": {
     "title": "Upload File",

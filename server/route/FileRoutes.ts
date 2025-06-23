@@ -26,6 +26,10 @@ const upload = multer();
  *               categories:
  *                 type: string
  *                 description: Comma separated category ids
+ *               createdAt:
+ *                 type: string
+ *                 format: date
+ *                 description: Optional custom file date
  *     responses:
  *       200:
  *         description: Uploaded

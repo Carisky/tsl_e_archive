@@ -21,7 +21,19 @@ export class FileController {
       return;
     }
 
-    const created = await FileService.upload(file.originalname, file.buffer, userId, categoryIds);
+    let createdAt: Date | undefined = undefined;
+    if (req.body.createdAt) {
+      const d = new Date(req.body.createdAt);
+      if (!isNaN(d.getTime())) createdAt = d;
+    }
+
+    const created = await FileService.upload(
+      file.originalname,
+      file.buffer,
+      userId,
+      categoryIds,
+      createdAt
+    );
     res.json(created);
   }
 

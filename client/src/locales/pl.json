@@ -55,7 +55,8 @@
   },
   "upload": {
     "title": "Prześlij plik",
-    "upload": "Prześlij"
+    "upload": "Prześlij",
+    "date": "Data pliku"
   },
   "about": {
     "title": "O nas"

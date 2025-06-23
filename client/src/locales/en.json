@@ -55,7 +55,8 @@
   },
   "upload": {
     "title": "Upload File",
-    "upload": "Upload"
+    "upload": "Upload",
+    "date": "File date"
   },
   "about": {
     "title": "About us"

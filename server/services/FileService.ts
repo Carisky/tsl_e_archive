@@ -10,7 +10,8 @@ export class FileService {
     filename: string,
     buffer: Buffer,
     userId: number | undefined,
-    categories: number[]
+    categories: number[],
+    createdAt?: Date
   ) {
     const key = uuidv4();
     await uploadToS3(key, buffer);
@@ -22,6 +23,7 @@ export class FileService {
         categories: {
           create: categories.map((categoryId) => ({ categoryId })),
         },
+        ...(createdAt ? { createdAt } : {}),
       },
       include: { categories: { include: { category: true } } },
     });

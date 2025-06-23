@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { UserController } from '../controllers/UserController';
+import { authMiddleware } from '../utils/authMiddleware';
 
 const router = Router();
 
@@ -57,5 +58,53 @@ router.post('/register', UserController.register);
  *         description: Successful login
  */
 router.post('/login', UserController.login);
+
+/**
+ * @swagger
+ * /api/user:
+ *   get:
+ *     summary: List users
+ *     tags: [User]
+ *     responses:
+ *       200:
+ *         description: Users list
+ *       403:
+ *         description: Forbidden
+ */
+router.get('/', authMiddleware as any, UserController.list);
+
+/**
+ * @swagger
+ * /api/user/{id}/role:
+ *   put:
+ *     summary: Update user role
+ *     tags: [User]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: User ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - role
+ *             properties:
+ *               role:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Updated user
+ *       400:
+ *         description: Invalid request
+ *       403:
+ *         description: Forbidden
+ */
+router.put('/:id/role', authMiddleware as any, UserController.setRole);
 
 export default router;

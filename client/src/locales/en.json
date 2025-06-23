@@ -4,6 +4,7 @@
     "upload": "Upload",
     "files": "Files",
     "categories": "Categories",
+    "users": "Users",
     "logout": "Logout",
     "login": "Login",
     "register": "Register"
@@ -57,6 +58,11 @@
     "title": "Upload File",
     "upload": "Upload",
     "date": "File date"
+  },
+  "users": {
+    "title": "Users",
+    "role": "Role",
+    "update": "Update"
   },
 "about": {
     "title": "E-Archive — electronic document archive",

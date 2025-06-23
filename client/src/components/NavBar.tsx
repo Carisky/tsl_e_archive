@@ -66,6 +66,11 @@ export default function NavBar() {
                 {t('navbar.categories')}
               </Button>
             )}
+            {auth.user.role === 'SUPERADMIN' && (
+              <Button color="inherit" component={Link} href={`/${lang}/dashboard/users`}>
+                {t('navbar.users')}
+              </Button>
+            )}
             <Button color="inherit" onClick={handleLogout}>
               {t('navbar.logout')}
             </Button>

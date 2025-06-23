@@ -4,6 +4,7 @@
     "upload": "Prześlij",
     "files": "Pliki",
     "categories": "Kategorie",
+    "users": "Użytkownicy",
     "logout": "Wyloguj",
     "login": "Zaloguj",
     "register": "Rejestracja"
@@ -57,6 +58,11 @@
     "title": "Prześlij plik",
     "upload": "Prześlij",
     "date": "Data pliku"
+  },
+  "users": {
+    "title": "Użytkownicy",
+    "role": "Rola",
+    "update": "Aktualizuj"
   },
   "about": {
     "title": "E-Archive — elektroniczne archiwum dokumentów",

@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { TextField, Button, Container, Typography, Box, IconButton, InputAdornment } from "@mui/material";
+import { TextField, Button, Container, Typography, Box, IconButton, InputAdornment, CircularProgress } from "@mui/material";
 import { loginUser } from "@/api/user";
 import { useRouter, useParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
@@ -16,18 +16,22 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
   const toggleShowPassword = () => setShowPassword((prev) => !prev);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const { user, token } = await loginUser({ email, password });
       setAuth({ token, user });
       router.push(`/${lang}/dashboard`);
     } catch (err) {
       setError(t('login.error'));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -75,8 +79,8 @@ export default function LoginPage() {
             {error}
           </Typography>
         )}
-        <Button variant="contained" type="submit">
-          {t('login.submit')}
+        <Button variant="contained" type="submit" disabled={loading}>
+          {loading ? <CircularProgress size={24} /> : t('login.submit')}
         </Button>
       </Box>
     </Container>

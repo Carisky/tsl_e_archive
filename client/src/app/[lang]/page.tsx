@@ -1,5 +1,12 @@
 "use client";
-import { Box, Button, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardActionArea,
+  CardContent,
+  Grid,
+  Typography,
+} from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useParams } from "next/navigation";
 
@@ -7,57 +14,52 @@ export default function Home() {
   const { t } = useTranslation();
   const params = useParams();
   const lang = Array.isArray(params.lang) ? params.lang[0] : params.lang ?? "en";
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
 
-        height: "100vh",
-        width: "100%",
+  const tiles = [
+    { href: `/${lang}/login`, label: t("home.login") },
+    { href: `/${lang}/register`, label: t("home.register") },
+    { href: `/${lang}/about`, label: t("home.about") },
+  ];
+
+  return (
+    <Grid
+      container
+      spacing={3}
+      justifyContent="center"
+      alignItems="center"
+      sx={{
+        minHeight: "100vh",
         backgroundColor: "#070b12",
-        position: "relative",
-        backgroundImage: " url(radiant-gradient.png);",
+        backgroundImage: "url(radiant-gradient.png)",
+        m: 0,
+        width: "100%",
       }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          marginTop: "5%",
-        }}
-      >
-        <Box>
-          <Typography variant="h3">{t("home.welcome")}</Typography>
-        </Box>
-        <Button
-          sx={{
-            marginTop: "20px",
-          }}
-          variant="contained"
-          href={`/${lang}/login`}
-        >
-          {t("home.login")}
-        </Button>
-        <Button
-          sx={{
-            marginTop: "20px",
-          }}
-          variant="contained"
-          href={`/${lang}/register`}
-        >
-          {t("home.register")}
-        </Button>
-        <Button
-          sx={{
-            marginTop: "20px",
-          }}
-          variant="contained"
-          href={`/${lang}/about`}
-        >
-          {t("home.about")}
-        </Button>
-      </Box>
-    </Box>
+      <Grid item xs={12}>
+        <Typography variant="h3" textAlign="center">
+          {t("home.welcome")}
+        </Typography>
+      </Grid>
+      {tiles.map(({ href, label }) => (
+        <Grid item key={href} xs={10} sm={6} md={3}>
+          <Card>
+            <CardActionArea href={href} sx={{ height: 120 }}>
+              <CardContent
+                sx={{
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Typography variant="h6" textAlign="center">
+                  {label}
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+        </Grid>
+      ))}
+    </Grid>
   );
 }

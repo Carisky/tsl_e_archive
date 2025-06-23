@@ -16,6 +16,7 @@ export default function UploadPage() {
   const [file, setFile] = useState<File | null>(null);
   const [categories, setCategories] = useState<any[]>([]);
   const [selected, setSelected] = useState<number[]>([]);
+  const [date, setDate] = useState<string>('');
 
   useEffect(() => {
     if (!initialized) return;
@@ -35,6 +36,7 @@ export default function UploadPage() {
     const fd = new FormData();
     fd.append('file', file);
     fd.append('categories', selected.join(','));
+    if (date) fd.append('createdAt', date);
     await uploadFile(fd, auth.token || '');
     router.push(`/${lang}/dashboard/files`);
   };
@@ -51,6 +53,13 @@ export default function UploadPage() {
             <MenuItem key={cat.id} value={cat.id}>{cat.name}</MenuItem>
           ))}
         </Select>
+        <TextField
+          type="date"
+          label={t('upload.date')}
+          InputLabelProps={{ shrink: true }}
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+        />
         <Button type="submit" variant="contained">
           {t('upload.upload')}
         </Button>

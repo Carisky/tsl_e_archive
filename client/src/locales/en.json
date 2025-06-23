@@ -58,8 +58,14 @@
     "upload": "Upload",
     "date": "File date"
   },
-  "about": {
-    "title": "About us"
+"about": {
+    "title": "E-Archive — electronic document archive",
+    "intro": "Convenient and secure storage of all important files in one place.",
+    "advantages": [
+      "Reliable document management and instant retrieval",
+      "VirusTotal scanning for guaranteed protection against malware",
+      "Amazon S3 storage: high access speed and scalability"
+    ]
   },
   "file": {
     "back": "Back",

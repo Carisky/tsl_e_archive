@@ -59,7 +59,13 @@
     "date": "Data pliku"
   },
   "about": {
-    "title": "O nas"
+    "title": "E-Archive — elektroniczne archiwum dokumentów",
+    "intro": "Wygodne i bezpieczne przechowywanie wszystkich ważnych plików w jednym miejscu.",
+    "advantages": [
+      "Rzetelne zarządzanie i błyskawiczne wyszukiwanie dokumentów",
+      "Skanowanie przez VirusTotal dla pełnej ochrony przed wirusami",
+      "Przechowywanie na Amazon S3: wysoka szybkość dostępu i skalowalność"
+    ]
   },
   "file": {
     "back": "Wstecz",

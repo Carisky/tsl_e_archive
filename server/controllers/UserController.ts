@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { UserService, IUserRegister, IUserLogin } from '../services/UserService';
 import { generateToken } from '../utils/auth';
+import { AuditLogService } from '../services/AuditLogService';
 
 export class UserController {
   // POST /register
@@ -18,6 +19,7 @@ export class UserController {
         email: user.email,
         role: user.role,
       });
+      await AuditLogService.create(user.id, 'USER_REGISTER', user.email);
       res.status(201).json({ user, token });
     } catch (err) {
       res.status(400).json({ error: (err as Error).message });
@@ -38,6 +40,7 @@ export class UserController {
         email: user.email,
         role: user.role,
       });
+      await AuditLogService.create(user.id, 'USER_LOGIN', user.email);
       res.status(200).json({ user, token });
     } catch (err) {
       res.status(401).json({ error: (err as Error).message });
@@ -66,6 +69,7 @@ export class UserController {
     }
     try {
       const user = await UserService.setRole(id, role);
+      await AuditLogService.create((req as any).userId, 'USER_SETROLE', `user:${id}=${role}`);
       res.json(user);
     } catch (err) {
       res.status(400).json({ error: (err as Error).message });

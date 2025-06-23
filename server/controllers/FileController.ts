@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { FileService } from '../services/FileService';
 import { VirusTotalService } from '../services/VirusTotalService';
+import { AuditLogService } from '../services/AuditLogService';
 
 export class FileController {
   static async upload(req: Request, res: Response): Promise<void> {
@@ -34,6 +35,7 @@ export class FileController {
       categoryIds,
       createdAt
     );
+    await AuditLogService.create(userId, 'UPLOAD', `file:${created.id}`);
     res.json(created);
   }
 
@@ -52,6 +54,7 @@ export class FileController {
     }
     res.setHeader('Content-Disposition', `attachment; filename="${result.file.filename}"`);
     res.send(Buffer.from(result.data));
+    await AuditLogService.create((req as any).userId, 'DOWNLOAD', `file:${id}`);
   }
 
   static async delete(req: Request, res: Response): Promise<void> {
@@ -62,6 +65,7 @@ export class FileController {
     } else {
       await FileService.softDelete(id);
     }
+    await AuditLogService.create((req as any).userId, 'DELETE', `file:${id}`);
     res.status(204).end();
   }
 

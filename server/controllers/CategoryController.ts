@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { CategoryService } from '../services/CategoryService';
+import { AuditLogService } from '../services/AuditLogService';
 
 export class CategoryController {
   static async list(_req: Request, res: Response) {
@@ -14,6 +15,7 @@ export class CategoryController {
     }
     const { name } = req.body;
     const category = await CategoryService.create(name);
+    await AuditLogService.create((req as any).userId, 'CATEGORY_CREATE', `category:${category.id}`);
     res.status(201).json(category);
   }
 
@@ -25,6 +27,7 @@ export class CategoryController {
     const id = parseInt(req.params.id);
     const { name } = req.body;
     const category = await CategoryService.update(id, name);
+    await AuditLogService.create((req as any).userId, 'CATEGORY_UPDATE', `category:${id}`);
     res.json(category);
   }
 
@@ -35,6 +38,7 @@ export class CategoryController {
     }
     const id = parseInt(req.params.id);
     await CategoryService.remove(id);
+    await AuditLogService.create((req as any).userId, 'CATEGORY_DELETE', `category:${id}`);
     res.status(204).end();
   }
 }

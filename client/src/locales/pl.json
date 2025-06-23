@@ -5,6 +5,7 @@
     "files": "Pliki",
     "categories": "Kategorie",
     "users": "Użytkownicy",
+    "logs": "Logi",
     "logout": "Wyloguj",
     "login": "Zaloguj",
     "register": "Rejestracja"
@@ -63,6 +64,12 @@
     "title": "Użytkownicy",
     "role": "Rola",
     "update": "Aktualizuj"
+  },
+  "logs": {
+    "title": "Dziennik zdarzeń",
+    "action": "Akcja",
+    "user": "Użytkownik",
+    "date": "Data"
   },
   "about": {
     "title": "E-Archive — elektroniczne archiwum dokumentów",

@@ -4,6 +4,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import userRoutes from './route/UserRoutes';
 import fileRoutes from './route/FileRoutes';
+import logRoutes from './route/LogRoutes';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './swagger';
 
@@ -21,6 +22,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // Подключаем роуты
 app.use('/api/user', userRoutes);
 app.use('/api/files', fileRoutes);
+app.use('/api/logs', logRoutes);
 
 // Глобальный обработчик ошибок (на будущее)
 app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {

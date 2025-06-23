@@ -43,4 +43,32 @@ export class UserController {
       res.status(401).json({ error: (err as Error).message });
     }
   }
+
+  static async list(req: Request, res: Response): Promise<void> {
+    if ((req as any).userRole !== 'SUPERADMIN') {
+      res.status(403).json({ error: 'Forbidden' });
+      return;
+    }
+    const users = await UserService.list();
+    res.json(users);
+  }
+
+  static async setRole(req: Request, res: Response): Promise<void> {
+    if ((req as any).userRole !== 'SUPERADMIN') {
+      res.status(403).json({ error: 'Forbidden' });
+      return;
+    }
+    const id = parseInt(req.params.id, 10);
+    const role = (req.body as any).role as string | undefined;
+    if (!role) {
+      res.status(400).json({ error: 'Role required' });
+      return;
+    }
+    try {
+      const user = await UserService.setRole(id, role);
+      res.json(user);
+    } catch (err) {
+      res.status(400).json({ error: (err as Error).message });
+    }
+  }
 }

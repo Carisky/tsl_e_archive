@@ -83,4 +83,28 @@ export class UserService {
     const { password: _p, roleId: _roleId, role, ...userWithoutPassword } = user;
     return { ...userWithoutPassword, role: role.role };
   }
+
+  // Список всех пользователей с ролями
+  static async list() {
+    const users = await prisma.user.findMany({ include: { role: true }, orderBy: { id: 'asc' } });
+    return users.map((u: any) => {
+      const { password, roleId, role, ...rest } = u;
+      return { ...rest, role: role.role };
+    });
+  }
+
+  // Изменить роль пользователя
+  static async setRole(userId: number, roleName: string) {
+    const role = await prisma.role.findUnique({ where: { role: roleName } });
+    if (!role) {
+      throw new Error('Role not found');
+    }
+    const user = await prisma.user.update({
+      where: { id: userId },
+      data: { roleId: role.id },
+      include: { role: true },
+    });
+    const { password, roleId, role: r, ...rest } = user;
+    return { ...rest, role: r.role };
+  }
 }

@@ -15,6 +15,7 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  CircularProgress,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
@@ -26,6 +27,9 @@ export default function FilesPage() {
   const { t } = useTranslation();
   const [query, setQuery] = useState("");
   const [files, setFiles] = useState<any[]>([]);
+  const [loadingFiles, setLoadingFiles] = useState(true);
+  const [searching, setSearching] = useState(false);
+  const [processingId, setProcessingId] = useState<number | null>(null);
   const grouped = useMemo(() => {
     const res: Record<string, Record<string, any[]>> = {};
     const uncategorized = t("files.uncategorized");
@@ -53,7 +57,8 @@ export default function FilesPage() {
     } else {
       listFiles("", auth.token || "")
         .then(setFiles)
-        .catch(() => {});
+        .catch(() => {})
+        .finally(() => setLoadingFiles(false));
     }
   }, [initialized, auth, router]);
 
@@ -61,8 +66,10 @@ export default function FilesPage() {
   if (!auth.user) return null;
 
   const search = async () => {
+    setSearching(true);
     const res = await listFiles(query, auth.token || "");
     setFiles(res);
+    setSearching(false);
   };
 
   return (
@@ -77,10 +84,13 @@ export default function FilesPage() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
-        <Button variant="contained" onClick={search}>
-          {t('files.searchBtn')}
+        <Button variant="contained" onClick={search} disabled={searching}>
+          {searching ? <CircularProgress size={24} /> : t('files.searchBtn')}
         </Button>
       </Box>
+      {loadingFiles ? (
+        <CircularProgress />
+      ) : (
       <List>
         {Object.entries(grouped).map(([year, cats]) => (
           <Accordion key={year} disableGutters>
@@ -98,6 +108,7 @@ export default function FilesPage() {
                               <ListItemText primary={f.filename} />
                               <Button
                                 variant="outlined"
+                                disabled={processingId === f.id}
                                 onClick={() =>
                                   router.push(`/${lang}/dashboard/files/${f.id}`)
                                 }
@@ -105,35 +116,55 @@ export default function FilesPage() {
                                 {t('files.preview')}
                               </Button>
                               <Button
+                                disabled={processingId === f.id}
                                 onClick={async () => {
-                                  const blob = await downloadFile(
-                                    f.id,
-                                    auth.token || ""
-                                  );
-                                  const url = window.URL.createObjectURL(blob);
-                                  const a = document.createElement("a");
-                                  a.href = url;
-                                  a.download = f.filename;
-                                  a.click();
-                                  window.URL.revokeObjectURL(url);
+                                  setProcessingId(f.id);
+                                  try {
+                                    const blob = await downloadFile(
+                                      f.id,
+                                      auth.token || ""
+                                    );
+                                    const url = window.URL.createObjectURL(blob);
+                                    const a = document.createElement("a");
+                                    a.href = url;
+                                    a.download = f.filename;
+                                    a.click();
+                                    window.URL.revokeObjectURL(url);
+                                  } finally {
+                                    setProcessingId(null);
+                                  }
                                 }}
                               >
-                                {t('files.download')}
+                                {processingId === f.id ? (
+                                  <CircularProgress size={24} />
+                                ) : (
+                                  t('files.download')
+                                )}
                               </Button>
                               {auth.user &&
                                 (auth.user.role === 'ADMIN' ||
                                   auth.user.role === 'SUPERADMIN') && (
                                   <Button
+                                    disabled={processingId === f.id}
                                     onClick={async () => {
-                                      await deleteFile(
-                                        f.id,
-                                        auth.token || '',
-                                        auth.user?.role === 'SUPERADMIN'
-                                      );
-                                      setFiles(files.filter((x) => x.id !== f.id));
+                                      setProcessingId(f.id);
+                                      try {
+                                        await deleteFile(
+                                          f.id,
+                                          auth.token || '',
+                                          auth.user?.role === 'SUPERADMIN'
+                                        );
+                                        setFiles(files.filter((x) => x.id !== f.id));
+                                      } finally {
+                                        setProcessingId(null);
+                                      }
                                     }}
                                   >
-                                    {t('files.delete')}
+                                    {processingId === f.id ? (
+                                      <CircularProgress size={24} />
+                                    ) : (
+                                      t('files.delete')
+                                    )}
                                   </Button>
                                 )}
                             </ListItem>
@@ -148,6 +179,7 @@ export default function FilesPage() {
           </Accordion>
         ))}
       </List>
+      )}
     </Container>
   );
 }

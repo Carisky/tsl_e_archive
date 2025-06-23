@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { TextField, Button, Container, Typography, Box } from '@mui/material';
+import { TextField, Button, Container, Typography, Box, CircularProgress } from '@mui/material';
 import { registerUser } from '@/api/user';
 import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
@@ -16,15 +16,19 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const { user, token } = await registerUser({ username, email, password });
       setAuth({ token, user });
       router.push(`/${lang}/dashboard`);
     } catch (err) {
       setError(t('register.error'));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -42,8 +46,8 @@ export default function RegisterPage() {
             {error}
           </Typography>
         )}
-        <Button variant="contained" type="submit">
-          {t('register.submit')}
+        <Button variant="contained" type="submit" disabled={loading}>
+          {loading ? <CircularProgress size={24} /> : t('register.submit')}
         </Button>
       </Box>
     </Container>

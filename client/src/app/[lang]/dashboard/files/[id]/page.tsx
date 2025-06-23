@@ -13,6 +13,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  CircularProgress,
 } from "@mui/material";
 import PrintIcon from "@mui/icons-material/Print";
 import { useTranslation } from "react-i18next";
@@ -146,7 +147,11 @@ export default function FilePreviewPage() {
   }
 
   if (!url) {
-    return <Container sx={{ mt: 4 }}>{t("file.loading")}</Container>;
+    return (
+      <Container sx={{ mt: 4 }}>
+        <CircularProgress /> {t("file.loading")}
+      </Container>
+    );
   }
 
   return (

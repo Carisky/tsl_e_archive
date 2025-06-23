@@ -5,6 +5,7 @@
     "files": "Files",
     "categories": "Categories",
     "users": "Users",
+    "logs": "Logs",
     "logout": "Logout",
     "login": "Login",
     "register": "Register"
@@ -63,6 +64,12 @@
     "title": "Users",
     "role": "Role",
     "update": "Update"
+  },
+  "logs": {
+    "title": "Audit Logs",
+    "action": "Action",
+    "user": "User",
+    "date": "Date"
   },
 "about": {
     "title": "E-Archive — electronic document archive",
